@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Darnton.Blazor.Leaflet
 {
-    internal class LeafletMapJSBinder : IAsyncDisposable
+    public class LeafletMapJSBinder : IAsyncDisposable
     {
         internal IJSRuntime JSRuntime;
         private Task<IJSObjectReference> _leafletMapModule;
@@ -12,11 +12,6 @@ namespace Darnton.Blazor.Leaflet
         public LeafletMapJSBinder(IJSRuntime jsRuntime)
         {
             JSRuntime = jsRuntime;
-        }
-
-        internal async Task<IJSObjectReference> GetLeafletMapModule()
-        {
-            return await (_leafletMapModule ??= JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Darnton.Blazor.Leaflet/js/leaflet-map.js").AsTask());
         }
 
         /// <inheritdoc/>
@@ -27,6 +22,11 @@ namespace Darnton.Blazor.Leaflet
                 var mapModule = await _leafletMapModule;
                 await mapModule.DisposeAsync();
             }
+        }
+
+        internal async Task<IJSObjectReference> GetLeafletMapModule()
+        {
+            return await (_leafletMapModule ??= JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Darnton.Blazor.Leaflet/js/leaflet-map.js").AsTask());
         }
     }
 }
